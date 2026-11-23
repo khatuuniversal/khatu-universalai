@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Khatu Universal AI</title>
+<style>
+:root{--bg:#ffffff;--surf:#f0f4f9;--surf2:#e3e9f1;--ink:#1f1f1f;--mut:#5f6368;--acc:#0b57d0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131314;--surf:#1e1f20;--surf2:#2d2f31;--ink:#e3e3e3;--mut:#9aa0a6;--acc:#a8c7fa}}
+:root[data-theme="dark"]{--bg:#131314;--surf:#1e1f20;--surf2:#2d2f31;--ink:#e3e3e3;--mut:#9aa0a6;--acc:#a8c7fa}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Google Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+header{display:flex;align-items:center;gap:8px;padding:12px 16px;font-size:18px;font-weight:500}
+header .sp{flex:1}
+.star{width:24px;height:24px;flex:none}
+#log{flex:1;overflow-y:auto;padding:8px 16px 16px;display:flex;flex-direction:column;gap:18px}
+.hero{margin:auto 0 0;padding:0 4px}
+.hero h2{font-size:38px;line-height:1.15;margin:0;font-weight:500;background:linear-gradient(90deg,#f59e0b,#ea580c 50%,#db2777);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{font-size:30px;margin:4px 0 0;color:var(--surf2);font-weight:500}
+@media (prefers-color-scheme:dark){.hero p{color:#4a4c50}}
+.cards{display:flex;gap:10px;overflow-x:auto;padding:14px 0 2px}
+.card{flex:none;width:150px;min-height:128px;background:var(--surf);border:0;border-radius:16px;padding:14px;text-align:left;font-size:14px;color:var(--ink);cursor:pointer;display:flex;flex-direction:column;justify-content:space-between;line-height:1.35;font-family:inherit}
+.card svg{width:22px;height:22px;align-self:flex-end;color:var(--mut)}
+.u{align-self:flex-end;max-width:85%;background:var(--surf2);padding:11px 16px;border-radius:20px 20px 4px 20px;font-size:16px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+.b{display:flex;gap:12px;align-items:flex-start}
+.b .txt{font-size:16px;line-height:1.65;white-space:pre-wrap;word-wrap:break-word}
+.acts{display:flex;gap:6px;margin-top:6px}
+.sm{border:0;background:none;color:var(--mut);padding:6px;border-radius:50%;cursor:pointer;display:grid;place-items:center}
+.sm:active{background:var(--surf);color:var(--acc)}
+.sm svg{width:20px;height:20px}
+.think .star{animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+form{margin:0 12px 12px;display:flex;align-items:center;gap:4px;background:var(--surf);border-radius:28px;padding:6px}
+input{flex:1;min-width:0;border:0;background:none;color:var(--ink);font-size:16px;padding:10px 0;outline:none;font-family:inherit}
+input::placeholder{color:var(--mut)}
+.ic{flex:none;width:42px;height:42px;border-radius:50%;border:0;background:none;color:var(--ink);cursor:pointer;display:grid;place-items:center}
+.ic.on{background:#d93025;color:#fff}
+#send{background:var(--ink);color:var(--bg)}
+#live{background:var(--surf2)}
+svg{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ic svg{width:21px;height:21px}
+#ov{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;align-items:center;justify-content:center;gap:26px;padding:env(safe-area-inset-top,0px) 20px env(safe-area-inset-bottom,0px)}
+#ov.show{display:flex}
+#stage{position:relative;width:190px;height:190px}
+#orb{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#fcd34d,#f59e0b 40%,#ea580c 75%,#db2777);box-shadow:0 0 70px #f59e0b88}
+#wave{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#st{font-size:20px;font-weight:500}
+#cap{font-size:15px;color:var(--mut);max-width:340px;text-align:center;min-height:44px;line-height:1.5;overflow:hidden}
+#end{background:#d93025;color:#fff;width:58px;height:58px}
+#end svg{width:26px;height:26px}
+#set{position:fixed;inset:0;background:#0007;z-index:25;display:none;align-items:flex-end;justify-content:center}
+#set.show{display:flex}
+.pan{background:var(--bg);width:100%;max-width:520px;max-height:92vh;overflow-y:auto;border-radius:24px 24px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:10px}
+.pan h3{margin:0;font-size:20px;font-weight:500}
+.pan label{font-size:13px;color:var(--mut)}
+.pan input{background:var(--surf);border-radius:14px;padding:13px 14px;width:100%}
+.pan small{color:var(--mut);line-height:1.5;font-size:13px}
+.row{display:flex;gap:10px;margin-top:4px}
+.btn{flex:1;border:0;border-radius:22px;padding:13px;font-size:15px;font-weight:500;cursor:pointer;background:var(--surf2);color:var(--ink);font-family:inherit}
+.btn.p{background:var(--ink);color:var(--bg)}
+#ks{font-size:13px;min-height:18px}
+.tools{display:flex;gap:8px;overflow-x:auto;padding:0 12px 8px}
+.tools button{flex:none;border:1px solid var(--surf2);background:none;color:var(--ink);border-radius:18px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:inherit}
+.tools button.on{background:var(--surf2);color:var(--acc);border-color:var(--acc)}
+#menu{position:fixed;top:calc(58px + env(safe-area-inset-top,0px));left:12px;background:var(--surf);border-radius:16px;padding:6px;z-index:15;display:none;width:290px;max-width:86%;max-height:72vh;overflow-y:auto;box-shadow:0 6px 24px #0004}
+#menu.show{display:block}
+#menu button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--ink);padding:11px 12px;border-radius:10px;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#menu button:active{background:var(--surf2)}
+#menu hr{border:0;border-top:1px solid var(--surf2);margin:4px 0}
+#dov{position:fixed;inset:0;background:#0006;z-index:18;display:none}
+#dov.show{display:block}
+#dr{position:fixed;top:0;bottom:0;left:0;width:300px;max-width:84%;background:var(--bg);z-index:19;transform:translateX(-104%);transition:transform .22s;display:flex;flex-direction:column;padding:calc(14px + env(safe-area-inset-top,0px)) 10px calc(12px + env(safe-area-inset-bottom,0px));box-shadow:4px 0 24px #0005}
+#dr.show{transform:none}
+#dr .dl{flex:1;overflow-y:auto}
+#dr .dt{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:500;padding:4px 8px 12px}
+#dr button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--ink);padding:11px 12px;border-radius:12px;font-size:15px;cursor:pointer;font-family:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#dr button:active{background:var(--surf)}
+#dr button.nc{background:var(--surf);font-weight:500;margin-bottom:6px}
+#dr button.red{background:#d93025;color:#fff;text-align:center;font-weight:500;font-size:14px;margin-top:8px}
+.ml{font-size:12px;color:var(--mut);padding:8px 12px 2px}
+#menu button.red{background:#d93025;color:#fff;text-align:center;font-weight:500;margin-top:8px;padding:9px;border-radius:12px;font-size:13px}
+#atts{display:flex;gap:8px;padding:0 14px 8px;overflow-x:auto}
+#atts:empty{display:none}
+.at{position:relative;flex:none}
+.at img{width:56px;height:56px;border-radius:12px;object-fit:cover;display:block}
+.at .f{height:56px;padding:0 12px;display:flex;align-items:center;background:var(--surf);border-radius:12px;font-size:12px;max-width:140px;overflow:hidden;white-space:nowrap}
+.at b{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:13px;cursor:pointer}
+.u img{max-width:150px;border-radius:12px;display:block;margin-bottom:6px}
+#am{position:fixed;left:12px;bottom:calc(76px + env(safe-area-inset-bottom,0px));max-height:72vh;overflow-y:auto;background:var(--surf);border-radius:18px;padding:6px;z-index:15;display:none;min-width:190px;box-shadow:0 6px 24px #0004}
+#am.show{display:block}
+#am button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--ink);padding:12px 14px;font-size:15px;cursor:pointer;border-radius:12px;font-family:inherit}
+#am button:active{background:var(--surf2)}
+#pw{position:fixed;inset:0;background:#0007;z-index:35;display:none;align-items:center;justify-content:center;padding:20px}
+#pw.show{display:flex}
+#pw .pan{border-radius:24px;max-width:360px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f59e0b"/><stop offset=".55" stop-color="#ea580c"/><stop offset="1" stop-color="#db2777"/></linearGradient><symbol id="s" viewBox="0 0 24 24"><path fill="url(#g)" stroke="none" d="M12 1c.6 6.3 4.7 10.4 11 11-6.3.6-10.4 4.7-11 11-.6-6.3-4.7-10.4-11-11 6.3-.6 10.4-4.7 11-11z"/></symbol></defs></svg>
+<header><button class="ic" id="ham" title="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><button class="ic" id="ai" title="AI sessions" style="background:var(--surf)"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="12" rx="3"/><path d="M12 8V5M9.5 13.5h.01M14.5 13.5h.01M9.5 17h5"/><circle cx="12" cy="4" r="1"/></svg></button>Khatu Universal AI<span class="sp"></span>
+<button class="ic" id="gear" title="Settings" style="display:none"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></header>
+<div id="log">
+  <div class="hero" id="hero">
+    <h2>Hello there</h2><p>How can I help you today?</p>
+    <div class="cards" id="cards"></div>
+  </div>
+</div>
+<div id="atts"></div><div class="tools" id="tools"></div>
+<form id="f"><button type="button" class="ic" id="plus" title="Add"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+  <input id="q" placeholder="Ask Khatu Universal AI" autocomplete="off" enterkeyhint="send">
+  <button type="button" class="ic" id="mic" title="Speak"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+  <button type="button" class="ic" id="live" title="Live voice chat"><svg viewBox="0 0 24 24"><path d="M4 10v4M8 6v12M12 3v18M16 7v10M20 10v4"/></svg></button>
+  <button class="ic" id="send" type="submit" title="Send"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+</form>
+<div id="ov">
+  <div id="st">Listening</div>
+  <div id="stage"><button id="orb" aria-label="Tap to talk"></button><canvas id="wave" width="380" height="380"></canvas></div>
+  <div id="cap"></div>
+  <button class="ic" id="end" title="End live chat"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+</div>
+<div id="dov"></div><div id="dr"></div><div id="menu"></div><div id="am"></div><input type="file" id="fimg" accept="image/*" multiple hidden><input type="file" id="fcam" accept="image/*" capture="environment" hidden><input type="file" id="ffile" accept=".txt,.md,.csv,.json,.js,.py,.html,.css,.java,.c,.cpp,.sql,text/*" multiple hidden>
+<div id="pw"><div class="pan"><h3>Admin access</h3><input id="pwin" type="password" placeholder="Password" autocomplete="off"><div id="pwe" style="color:#d93025;font-size:13px;min-height:16px"></div><div class="row"><button class="btn" id="pwcancel" type="button">Cancel</button><button class="btn p" id="pwok" type="button">OK</button></div></div></div>
+<div id="set">
+  <div class="pan">
+    <h3>Connect your Gemini API key</h3>
+    <label for="kin">Gemini API key</label>
+    <input id="kin" type="password" placeholder="Paste your key here" autocomplete="off">
+    <label for="min">Model</label>
+    <input id="min" type="text" value="gemini-2.5-flash" autocomplete="off">
+    <label for="xin">Backup keys (one per line, used automatically if the main key fails)</label><textarea id="xin" rows="3" style="background:var(--surf);color:var(--ink);border:0;border-radius:14px;padding:12px;font-size:14px;width:100%;font-family:inherit"></textarea><label for="gin">Google sign-in Client ID</label><input id="gin" type="text" placeholder="xxxx.apps.googleusercontent.com" autocomplete="off"><small>The key is saved only in this browser and is used right away, with no reload. When this page is hosted on your own site (Chrome, GitHub Pages), the AI connects directly to Gemini with this key.</small>
+    <div id="ks"></div>
+    <div class="row"><button class="btn" id="kclr" type="button">Remove key</button><button class="btn p" id="ksave" type="button">Save and connect</button></div>
+    <div class="row"><button class="btn" id="kclose" type="button">Close</button></div>
+  </div>
+</div>
+<script>
+var KB=[
+"Company: Khatu Universal (website: khatuuniversal.in). Owner and founder: Nitin Srivastava.",
+"The company builds digital tools, web apps and online services.",
+"Khatu Universal Science Study Lab: a study app with PC and mobile modes, free and premium tools, login and videos.",
+"Bharat-Sovereign Micro-Enterprise and Tech Ledger: a dashboard for small businesses with an asset ledger and a QR generator.",
+"Activation platform: users log in and activate a service with a key.",
+"Payments are made by UPI (QR code, app buttons and UTR check)."
+].join("\n");
+var SYS='You are "Khatu Universal AI", the official assistant of the company Khatu Universal. Rules: 1) Answer ONLY about the company, its website, services and apps, using the information below. 2) Never invent facts such as exact prices or phone numbers; if it is not below, say to contact the company directly. 3) For unrelated questions, politely say you can only help with Khatu Universal. 4) Always reply in English only, even if the user writes in another language. 5) Be fast and brief: 1 to 3 short sentences, friendly, no markdown, no asterisks, no emojis. 6) Never say which AI model you are built on; you are Khatu Universal AI.\n\nCompany information:\n'+KB;
+
+var $=function(i){return document.getElementById(i)};
+var mem={};
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return mem[k]||null}}
+function lsSet(k,v){try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){if(v==null)delete mem[k];else mem[k]=v}}
+var log=$('log'),q=$('q'),hist=[],sample=null,dict=null,busy=false,live=false,micOn=false,base='',pend=0,done=true,voice=null;
+var DK=['AQ.Ab8RN6LgVb','skRdM-W412s6','NNy1JZSnfRVV','FZRT6-dom3pO','yQ5Q'].join(''),gkey=lsGet('gkey')||DK,gmodel=lsGet('gmodel')||'gemini-2.5-flash',xkeys=(lsGet('xkeys')||'').split(/\s+/).filter(Boolean);
+var SPK='<svg viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4zM15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></svg>';
+var CPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg>';
+var CHATI='<svg viewBox="0 0 24 24"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/></svg>';
+
+function note(m){var n=$('toast');if(!n){n=document.createElement('div');n.id='toast';n.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:14px;font-size:14px;z-index:40;max-width:86%;text-align:center';document.body.appendChild(n)}n.textContent=m;n.style.display='block';clearTimeout(n.t);n.t=setTimeout(function(){n.style.display='none'},4500)}
+
+/* Voice output (female voice) */
+var TTS=('speechSynthesis' in window)&&('SpeechSynthesisUtterance' in window);
+function getVoice(){if(!TTS)return;var vs=speechSynthesis.getVoices().filter(function(v){return /^en/i.test(v.lang)});var F=/female|zira|samantha|heera|veena|karen|tessa|moira|fiona|victoria|susan|hazel|aria|jenny|sonia|libby|natasha|neerja|google us english|kathy|allison|ava|serena|catherine|linda|emma|amy|joanna|salli|kendra/i,M=/\bmale\b|david|mark|daniel|alex|rishi|george|james|fred|ravi|thomas|guy|ryan|brian|eric|prabhat|aaron|arthur|gordon/i;var best=null,bs=0;vs.forEach(function(v){var s=0,n=v.name;if(M.test(n))return;if(F.test(n))s+=5;if(/en[-_]IN/i.test(v.lang))s+=2;if(/en[-_]US/i.test(v.lang))s+=1;if(/Google|Natural|Online/i.test(n))s+=1;if(s>bs){bs=s;best=v}});voice=bs>=5?best:null}
+if(TTS){try{getVoice();speechSynthesis.onvoiceschanged=getVoice}catch(e){}}
+function say(t){
+  if(!TTS){if(!say.w){say.w=1;note('Voice playback is not supported in this browser. Please open the page in Chrome.')}return}
+  try{if(!voice)getVoice();var u=new SpeechSynthesisUtterance(t);u.lang=voice?voice.lang:'en-US';if(voice)u.voice=voice;u.rate=1.05;u.pitch=1.2;
+  u.onboundary=function(){bump(.5+Math.random()*.5)};pend++;u.onend=u.onerror=function(){pend=Math.max(0,pend-1);liveCheck()};speechSynthesis.speak(u)}catch(e){pend=0}
+}
+function stopSay(){try{if(TTS)speechSynthesis.cancel()}catch(e){}pend=0}
+
+/* Chat UI */
+['What is Khatu Universal?','Tell me about the Science Study Lab','How do payments work?','What services do you offer?'].forEach(function(s){var b=document.createElement('button');b.className='card';b.innerHTML='<span></span>'+CHATI;b.firstChild.textContent=s;b.onclick=function(){ask(s)};$('cards').appendChild(b)});
+function addUser(t,A){var d=document.createElement('div');d.className='u';(A||[]).forEach(function(x){if(x.kind==='img'){var i=document.createElement('img');i.src=x.url;d.appendChild(i)}else{var s=document.createElement('div');s.textContent=x.name;s.style.cssText='font-size:12px;opacity:.8;margin-bottom:4px';d.appendChild(s)}});d.appendChild(document.createTextNode(t));log.appendChild(d)}
+function addBot(){var r=document.createElement('div');r.className='b think';r.innerHTML='<svg class="star"><use href="#s"/></svg><div style="flex:1;min-width:0"><div class="txt"></div><div class="acts"></div></div>';log.appendChild(r);return r}
+function finish(r,text){
+  r.classList.remove('think');var a=r.querySelector('.acts');a.innerHTML='';
+  var s=document.createElement('button');s.className='sm';s.title='Listen';s.innerHTML=SPK;s.onclick=function(){stopSay();say(text)};a.appendChild(s);
+  var c=document.createElement('button');c.className='sm';c.title='Copy';c.innerHTML=CPY;c.onclick=function(){try{navigator.clipboard.writeText(text);note('Copied')}catch(e){}};a.appendChild(c);
+  var rg=document.createElement('button');rg.className='sm';rg.title='Regenerate';rg.innerHTML='<svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v5h-5"/></svg>';rg.onclick=function(){if(busy||hist.length<2)return;var u=hist[hist.length-2].t;hist.splice(-2,2);var pu=r.previousSibling;r.remove();if(pu&&pu.classList&&pu.classList.contains('u'))pu.remove();ask(u)};a.appendChild(rg);
+}
+function scroll(){log.scrollTop=log.scrollHeight}
+
+/* AI engines */
+async function gemini(turns,text,ot,mm){var ks=[gkey].concat(xkeys),er;for(var i=0;i<ks.length;i++){if(!ks[i])continue;try{return await gemini1(turns,text,ot,mm,ks[i])}catch(e){er=e}}throw er||{code:'net'}}
+async function gemini1(turns,text,ot,mm,key){mm=mm||gmodel;
+  var contents=turns.map(function(m){return{role:m.r==='u'?'user':'model',parts:[{text:m.t}]}});var up=[{text:text}];(curIM||[]).forEach(function(m){up.push({inlineData:{mimeType:m.type,data:m.b64}})});contents.push({role:'user',parts:up});
+  var gc={maxOutputTokens:mode?2000:400,temperature:.6};if(!/pro/i.test(mm))gc.thinkingConfig={thinkingBudget:0};
+  var res;
+  try{res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(mm)+':streamGenerateContent?alt=sse',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':key},body:JSON.stringify({systemInstruction:{parts:[{text:SYS}]},contents:contents,generationConfig:gc})})}catch(e){throw{code:'net'}}
+  if(!res.ok){var s=res.status;if(s===404&&mm!=='gemini-flash-latest')return gemini1(turns,text,ot,'gemini-flash-latest',key);throw{code:(s===400||s===401||s===403)?'bad_key':s===429?'rate_limited':'upstream_error'}}
+  var rd=res.body.getReader(),dec=new TextDecoder(),buf='',all='';
+  for(;;){var x=await rd.read();if(x.done)break;buf+=dec.decode(x.value,{stream:true});var ls=buf.split('\n');buf=ls.pop();
+    ls.forEach(function(l){if(l.indexOf('data:')!==0)return;try{var j=JSON.parse(l.slice(5)),p=j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts;if(p){p.forEach(function(y){if(y.text)all+=y.text});ot({text:all})}}catch(e){}})}
+  return all;
+}
+async function viaSample(prompt,ot){
+  var o;
+  try{o=await sample([{role:'user',content:prompt}],so({cache:false,modelTier:'quick',onText:ot}))}
+  catch(e1){if(e1&&/^(upstream_error|empty_completion|refused|invalid_request)$/.test(e1.code)){o=await sample([{role:'user',content:prompt}],so({cache:false,onText:ot}))}else throw e1}
+  return(o&&o.text)||'';
+}
+async function ask(text){
+  text=(text||'').trim();if(busy||(!text&&!att.length))return;if(!text)text='Please look at the attachment.';
+  var A=att.slice();att=[];renderAtts();var h=$('hero');if(h)h.remove();q.value='';addUser(text,A);var IM=A.filter(function(x){return x.kind==='img'});curIM=IM;A.forEach(function(x){if(x.kind==='txt')text+='\n\n[File: '+x.name+']\n'+x.text});if(IM.length&&sample&&!imgOK&&!gkey)note('Image reading is not available in this preview.');
+  if(!gkey&&!sample){var e=addBot();e.querySelector('.txt').textContent='Please add your Gemini API key in Settings (the gear icon at the top) to start.';e.classList.remove('think');$('set').classList.add('show');return}
+  busy=true;done=false;var r=addBot(),box=r.querySelector('.txt'),ans='',spoken=0;scroll();
+  function chunk(full,fin){
+    if(!live)return;var rest=full.slice(spoken),cut=-1,m,re=fin?/[.!?]+(\s|$)/g:/[.!?]+\s/g;
+    while((m=re.exec(rest)))cut=m.index+m[0].length;if(fin)cut=rest.length;
+    if(cut>0){var p=rest.slice(0,cut).trim();spoken+=cut;if(p){setLive('speak','Speaking');say(p)}}
+  }
+  var ot=function(o){ans=o.text;box.textContent=ans;scroll();chunk(ans,false)};
+  var turns=hist.slice(-6);
+  try{
+    var out;
+    if(gkey&&!sample){try{out=await gemini(turns,text,ot)}catch(g){if(sample&&g.code!=='bad_key'&&!ans){out=await viaSample(SYS+"\n\nConversation so far:\n"+(turns.map(function(m){return(m.r==='u'?'User: ':'AI: ')+m.t}).join("\n")||'(new)')+"\n\nUser: "+text+"\nAI:",ot)}else throw g}}
+    else out=await viaSample(SYS+"\n\nConversation so far:\n"+(turns.map(function(m){return(m.r==='u'?'User: ':'AI: ')+m.t}).join("\n")||'(new)')+"\n\nUser: "+text+"\nAI:",ot);
+    ans=(out||ans).trim();box.textContent=ans;chunk(ans,true);finish(r,ans);if(autoRead&&!live)say(ans);hist.push({r:'u',t:text},{r:'b',t:ans});
+  }catch(err){
+    var c=(err&&err.code)||'unknown';
+    ans=c==='bad_key'||c==='net'?'Sorry, I am having trouble answering right now. Please try again in a moment.':c==='not_granted'?'Please tap Allow when the permission box appears, then ask again.':c==='session_expired'?'Your Claude session expired. Please sign in again and reopen this page.':(c==='sampling_disabled'||c==='capability_disabled')?'The AI is not enabled for this account.':c==='rate_limited'?'Too many questions or the usage limit was reached. Please try again later.':'Sorry, I could not get an answer. Please try again.';
+    box.textContent=ans;r.classList.remove('think');if(live)say(ans);
+  }
+  busy=false;done=true;scroll();liveCheck();
+}
+$('f').addEventListener('submit',function(e){e.preventDefault();ask(q.value)});
+
+/* Tools, sessions, admin gate */
+var BASE=SYS,mode='';
+var TL=[['code','Write code','Code mode. Ignore rule 1 and the brevity rule: help with any programming task. Give complete working code as plain text (no markdown fences) with short comments and a brief explanation.'],['video','Video editing','Video mode. Ignore rule 1 and the brevity rule: help plan and edit videos with scripts, storyboards, shot lists, captions, timing and step-by-step editing instructions for tools like CapCut, Premiere or DaVinci Resolve. You cannot process video files yourself; say so if asked to edit a file.'],['write','Write','Writing mode. Ignore rule 1 and the brevity rule: help write emails, posts, ads, scripts and documents in good English. Keep company facts accurate where relevant.'],['sum','Summarize','Summary mode. Ignore rule 1: summarize or simplify any text the user pastes, with the key points.'],['learn','Learn','Learning mode. Ignore rule 1 and the brevity rule: explain any topic simply with examples, like a patient teacher.'],['tr','Translate','Translation mode. Ignore rule 1 and rule 4: translate text between languages as the user asks.'],['idea','Brainstorm','Brainstorm mode. Ignore rule 1 and the brevity rule: give fresh, practical ideas for business, products, names and content, in a short numbered list.'],['quiz','Quiz me','Quiz mode. Ignore rule 1: quiz the user on any topic they name, one question at a time, then check the answer and explain.'],['fix','Fix grammar','Grammar mode. Ignore rule 1: correct the grammar, spelling and tone of the text the user sends and return only the improved text.'],['plan','Study plan','Planner mode. Ignore rule 1 and the brevity rule: build a simple day-by-day study or work plan for the goal the user gives.'],['post','Social post','Social media mode. Ignore rule 1 and the brevity rule: write catchy posts, captions and hashtags for the topic the user gives.'],['read','Read file','Reader mode. Ignore rule 1: read the file or text the user attached or pasted and answer questions about it, giving key points and any problems you notice.'],['debug','Debug code','Debug mode. Ignore rule 1 and the brevity rule: find the bug in the code the user gives, explain it simply, and return the corrected code as plain text.'],['explain','Explain code','Code explainer mode. Ignore rule 1 and the brevity rule: explain what the code does, step by step, in simple words.'],['math','Solve math','Math mode. Ignore rule 1 and the brevity rule: solve maths and science problems step by step and show the final answer clearly.'],['mail','Write email','Email mode. Ignore rule 1 and the brevity rule: write a clear, polite, ready-to-send email with a subject line.'],['resume','Resume','Resume mode. Ignore rule 1 and the brevity rule: help build or improve a resume or cover letter with strong, honest wording.'],['story','Story','Story mode. Ignore rule 1 and the brevity rule: write an engaging short story or script on the topic the user gives.'],['img','Photo help','Photo mode. Ignore rule 1: describe and analyse any photo the user attaches, read text inside it, and answer questions about it.'],['biz','Business help','Business mode. Ignore rule 1 and the brevity rule: help with business plans, pricing ideas, marketing and customer replies for small businesses.'],['talk','Talk practice','Speaking practice mode. Ignore rule 1: hold a friendly English conversation and gently correct mistakes in one short line each time.']];
+function setMode(id){mode=id;var t=TL.filter(function(x){return x[0]===id})[0];SYS=BASE+(t?'\n\nCURRENT MODE: '+t[2]:'');q.placeholder=id?'Describe what you need':'Ask Khatu Universal AI';Array.prototype.forEach.call($('tools').children,function(b){b.classList.toggle('on',b.dataset.id===id)})}
+TL.slice(0,6).forEach(function(x){var b=document.createElement('button');b.type='button';b.textContent=x[1];b.dataset.id=x[0];b.onclick=function(){setMode(mode===x[0]?'':x[0]);q.focus()};$('tools').appendChild(b)});
+var SUG=['What is Khatu Universal?','Tell me about the Science Study Lab','How do payments work?','What services do you offer?'];
+function mkCards(){var c=$('cards');if(!c)return;SUG.forEach(function(s){var b=document.createElement('button');b.className='card';b.innerHTML='<span></span>'+CHATI;b.firstChild.textContent=s;b.onclick=function(){ask(s)};c.appendChild(b)})}
+var sess=[],cur=Date.now();try{sess=JSON.parse(lsGet('sess')||'[]')}catch(e){sess=[]}
+function saveSess(){if(!hist.length)return;var s=sess.filter(function(x){return x.id===cur})[0];if(s)s.h=hist;else sess.unshift({id:cur,title:hist[0].t.slice(0,34),h:hist});sess=sess.slice(0,15);lsSet('sess',JSON.stringify(sess))}
+function newChat(){if(busy)return;saveSess();hist=[];cur=Date.now();setMode('');log.innerHTML='<div class="hero" id="hero"><h2>Hello there</h2><p>How can I help you today?</p><div class="cards" id="cards"></div></div>';mkCards()}
+function loadSess(s){if(busy)return;saveSess();hist=s.h.slice();cur=s.id;log.innerHTML='';hist.forEach(function(m){if(m.r==='u')addUser(m.t);else{var r=addBot();r.querySelector('.txt').textContent=m.t;finish(r,m.t)}});scroll()}
+function renderMenu(){var m=$('menu');m.innerHTML='';function lab(t){var d=document.createElement('div');d.className='ml';d.textContent=t;m.appendChild(d)}function btn(t,f,c){var b=document.createElement('button');b.textContent=t;if(c)b.className=c;b.onclick=function(){f();m.classList.remove('show')};m.appendChild(b)}
+  if(user){lab('Signed in as '+(user.n||user.e));btn('Sign out',function(){user=null;lsSet('guser',null)})}else if(gcid)btn('Sign in with Google',gSign);
+  m.appendChild(document.createElement('hr'));lab('Features');TL.forEach(function(x){btn(x[1],function(){setMode(x[0]);q.focus()})});
+  m.appendChild(document.createElement('hr'));lab('Chats');btn('New chat',newChat);sess.slice(0,6).forEach(function(s){btn(s.title,function(){loadSess(s)})});btn('Clear chat',clearChat,'red')}
+var tn=0,tt;
+$('ai').onclick=function(){tn++;clearTimeout(tt);tt=setTimeout(function(){tn=0},1500);var m=$('menu');if(tn>=10){tn=0;m.classList.remove('show');askPw();return}if(m.classList.contains('show'))m.classList.remove('show');else{saveSess();renderMenu();m.classList.add('show')}};
+document.addEventListener('click',function(e){var m=$('menu');if(m.classList.contains('show')&&!m.contains(e.target)&&!$('ai').contains(e.target))m.classList.remove('show')});
+var PWH='y9hzqf3rng',bad=0,lockT=0;
+function hp(s){var a=0xdeadbeef,b=0x41c6ce57;for(var i=0,c;i<s.length;i++){c=s.charCodeAt(i);a=Math.imul(a^c,2654435761);b=Math.imul(b^c,1597334677)}a=Math.imul(a^(a>>>16),2246822507)^Math.imul(b^(b>>>13),3266489909);b=Math.imul(b^(b>>>16),2246822507)^Math.imul(a^(a>>>13),3266489909);return(4294967296*(2097151&b)+(a>>>0)).toString(36)}
+function askPw(){$('pwin').value='';$('pwe').textContent='';$('pw').classList.add('show');setTimeout(function(){$('pwin').focus()},100)}
+$('pwok').onclick=function(){if(Date.now()<lockT){$('pwe').textContent='Too many attempts. Try again in a minute.';return}var v=$('pwin').value.toLowerCase().replace(/\s+/g,'');if(hp(v)===PWH){bad=0;$('pw').classList.remove('show');openSet()}else{bad++;$('pwin').value='';$('pwe').textContent='Wrong password.';if(bad>=5){lockT=Date.now()+60000;bad=0}}};
+$('pwcancel').onclick=function(){$('pw').classList.remove('show')};
+$('pwin').addEventListener('keydown',function(e){if(e.key==='Enter')$('pwok').click()});
+var curIM=[],imgOK=false,att=[],autoRead=false,gcid=lsGet('gcid')||'',user=null;try{user=JSON.parse(lsGet('guser')||'null')}catch(e){}
+function so(b){var i=(imgOK&&curIM&&curIM.length)?curIM.map(function(m){return m.blob}):null;if(i)b.images=i;return b}
+function clearChat(){if(busy)return;sess=sess.filter(function(s){return s.id!==cur});lsSet('sess',JSON.stringify(sess));hist=[];cur=Date.now();setMode('');att=[];renderAtts();stopSay();log.innerHTML='<div class="hero" id="hero"><h2>Hello there</h2><p>How can I help you today?</p><div class="cards" id="cards"></div></div>';mkCards()}
+function gSign(){
+  if(!gcid){note('Google sign-in is not set up yet. Add the Google Client ID in the admin settings.');return}
+  function go(){try{google.accounts.id.initialize({client_id:gcid,callback:function(r){try{var p=JSON.parse(decodeURIComponent(escape(atob(r.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))));user={n:p.name,e:p.email};lsSet('guser',JSON.stringify(user));note('Signed in')}catch(e){note('Sign-in failed. Please try again.')}}});google.accounts.id.prompt()}catch(e){note('Google sign-in is not available here.')}}
+  if(window.google&&google.accounts)go();else{var s=document.createElement('script');s.src='https://accounts.google.com/gsi/client';s.onload=go;s.onerror=function(){note('Google sign-in works only on your own website, not in this preview.')};document.head.appendChild(s)}
+}
+function renderAtts(){var a=$('atts');a.innerHTML='';att.forEach(function(x,i){var d=document.createElement('div');d.className='at';if(x.kind==='img'){var im=document.createElement('img');im.src=x.url;d.appendChild(im)}else{var f=document.createElement('div');f.className='f';f.textContent=x.name;d.appendChild(f)}var b=document.createElement('b');b.textContent='\u00d7';b.onclick=function(){att.splice(i,1);renderAtts()};d.appendChild(b);a.appendChild(d)})}
+function shrink(file){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var s=Math.min(1,1280/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*s);c.height=Math.round(im.height*s);c.getContext('2d').drawImage(im,0,0,c.width,c.height);var u=c.toDataURL('image/jpeg',.85);c.toBlob(function(bl){res({kind:'img',blob:bl,type:'image/jpeg',b64:u.split(',')[1],url:u,name:file.name})},'image/jpeg',.85)};im.onerror=rej;im.src=r.result};r.onerror=rej;r.readAsDataURL(file)})}
+function addFiles(list,img){Array.prototype.forEach.call(list,function(f){if(att.length>=4){note('You can attach up to 4 items.');return}if(img||/^image\//.test(f.type)){shrink(f).then(function(x){att.push(x);renderAtts()}).catch(function(){note('Could not read that image.')})}else{if(f.size>200000){note('That file is too large. Please use a smaller text file.');return}var r=new FileReader();r.onload=function(){att.push({kind:'txt',name:f.name,text:String(r.result).slice(0,40000)});renderAtts()};r.readAsText(f)}})}
+(function(){var am=$('am');[['Photos','fimg'],['Camera','fcam'],['Files','ffile']].forEach(function(x){var b=document.createElement('button');b.textContent=x[0];b.onclick=function(){am.classList.remove('show');$(x[1]).click()};am.appendChild(b)});
+var mb=document.createElement('button');mb.textContent='More';mb.style.fontWeight='500';var ml=document.createElement('div');ml.style.cssText='display:none;border-top:1px solid var(--surf2);margin-top:4px;padding-top:4px';
+TL.forEach(function(x){var b=document.createElement('button');b.textContent=x[1];b.onclick=function(){am.classList.remove('show');setMode(x[0]);q.focus()};ml.appendChild(b)});
+var lv=document.createElement('button');lv.textContent='Live voice';lv.onclick=function(){am.classList.remove('show');$('live').click()};ml.appendChild(lv);
+var ar=document.createElement('button');ar.textContent='Read replies aloud: Off';ar.onclick=function(e){e.stopPropagation();autoRead=!autoRead;ar.textContent='Read replies aloud: '+(autoRead?'On':'Off')};ml.appendChild(ar);
+var cl=document.createElement('button');cl.textContent='Clear chat';cl.style.color='#d93025';cl.onclick=function(){am.classList.remove('show');clearChat()};ml.appendChild(cl);
+mb.onclick=function(e){e.stopPropagation();var open=ml.style.display==='none';ml.style.display=open?'block':'none';mb.textContent=open?'Less':'More';if(open)setTimeout(function(){mb.scrollIntoView({block:'start'})},50)};
+am.appendChild(mb);am.appendChild(ml);})();
+$('plus').onclick=function(){$('menu').classList.remove('show');$('am').classList.toggle('show')};
+$('fimg').onchange=$('fcam').onchange=function(){addFiles(this.files,true);this.value=''};
+$('ffile').onchange=function(){addFiles(this.files,false);this.value=''};
+document.addEventListener('click',function(e){var a=$('am');if(a.classList.contains('show')&&!a.contains(e.target)&&!$('plus').contains(e.target))a.classList.remove('show')});
+function closeDr(){$('dr').classList.remove('show');$('dov').classList.remove('show')}
+function renderDr(){var d=$('dr');d.innerHTML='';var t=document.createElement('div');t.className='dt';t.innerHTML='<svg class="star"><use href="#s"/></svg>';t.appendChild(document.createTextNode('Khatu Universal AI'));d.appendChild(t);
+  var l=document.createElement('div');l.className='dl';d.appendChild(l);
+  function lab(x){var e=document.createElement('div');e.className='ml';e.textContent=x;l.appendChild(e)}
+  function btn(x,f,c){var b=document.createElement('button');b.textContent=x;if(c)b.className=c;b.onclick=function(){f();closeDr()};(c==='red'?d:l).appendChild(b)}
+  btn('New chat',newChat,'nc');
+  if(user)lab('Signed in as '+(user.n||user.e));else if(gcid)btn('Sign in with Google',gSign);
+  lab('Recent chats');if(!sess.length)lab('No saved chats yet');
+  sess.forEach(function(s){btn(s.title,function(){loadSess(s)})});
+  lab('Features');TL.forEach(function(x){btn(x[1],function(){setMode(x[0]);q.focus()})});
+  if(user)btn('Sign out',function(){user=null;lsSet('guser',null)});
+  btn('Clear chat',clearChat,'red')}
+$('ham').onclick=function(){saveSess();renderDr();$('menu').classList.remove('show');$('am').classList.remove('show');$('dr').classList.add('show');$('dov').classList.add('show')};
+$('dov').onclick=closeDr;
+window.addEventListener('pagehide',saveSess);
+
+/* Settings */
+function openSet(){$('kin').value=gkey;$('min').value=gmodel;$('xin').value=xkeys.join('\n');$('gin').value=gcid;$('ks').textContent=gkey?'Connected with your Gemini key.':'';$('set').classList.add('show')}
+$('gear').onclick=openSet;$('kclose').onclick=function(){$('set').classList.remove('show')};
+$('ksave').onclick=function(){
+  var k=$('kin').value.trim(),m=$('min').value.trim()||'gemini-2.5-flash';
+  if(!k){$('ks').textContent='Please paste a key first.';return}
+  gkey=k;gmodel=m;lsSet('gkey',k);lsSet('gmodel',m);xkeys=$('xin').value.split(/\s+/).filter(Boolean);lsSet('xkeys',xkeys.join(' '));gcid=$('gin').value.trim();lsSet('gcid',gcid);$('ks').textContent='Connected. You can chat now.';
+  setTimeout(function(){$('set').classList.remove('show')},700);
+};
+$('kclr').onclick=function(){gkey=DK;lsSet('gkey',null);$('kin').value='';$('ks').textContent='Reset to the built-in key.'};
+
+/* Live orb and wave */
+var cv=$('wave'),cx=cv.getContext('2d'),amp=0,tgt=0,ph=0,raf=0,wst='idle';
+function bump(v){tgt=Math.max(tgt,v)}
+function frame(){
+  if(!live){raf=0;return}
+  ph+=.11;var base=wst==='listen'?.16:wst==='speak'?.28:wst==='think'?.1:.05;
+  if(wst==='listen'&&Math.random()<.04)bump(.35+Math.random()*.3);
+  tgt*=.9;amp+=(Math.max(base,tgt)-amp)*.25;
+  var W=cv.width,H=cv.height;cx.clearRect(0,0,W,H);cx.save();cx.beginPath();cx.arc(W/2,H/2,W/2-4,0,7);cx.clip();
+  for(var k=0;k<3;k++){cx.beginPath();cx.lineWidth=7-k*2;cx.lineCap='round';cx.strokeStyle='rgba(255,255,255,'+(.95-k*.28)+')';
+    for(var x=0;x<=W;x+=6){var n=x/W,env=Math.sin(Math.PI*n),y=H/2+Math.sin(n*(6+k*2)+ph*(1+k*.4)+k)*amp*H*.4*env*(1+.3*Math.sin(ph*.7+k));if(x)cx.lineTo(x,y);else cx.moveTo(x,y)}
+    cx.stroke()}
+  cx.restore();$('stage').style.transform='scale('+(1+amp*.1)+')';
+  raf=requestAnimationFrame(frame);
+}
+function setLive(cls,st,cap){wst=cls||'idle';$('st').textContent=st;if(cap!==undefined)$('cap').textContent=cap;if(live&&!raf)raf=requestAnimationFrame(frame)}
+
+/* Voice input */
+function micFail(e){micOn=false;var c=String((e&&(e.code||e.error))||'');note(/not_granted|not-allowed|service-not-allowed/.test(c)?'Microphone access is blocked. Please allow the microphone and try again.':'Voice input could not start here. Please open this page in Chrome.');if(live)setLive('','Tap to talk')}
+var SRAd=(function(){var SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR)return null;var rec=null,pf,ff,sf;return{onPartial:function(f){pf=f},onFinal:function(f){ff=f},onState:function(f){sf=f},start:function(){return new Promise(function(res,rej){try{rec=new SR();rec.lang='en-US';rec.interimResults=true;rec.continuous=false;rec.onresult=function(e){var it='';for(var i=e.resultIndex;i<e.results.length;i++){var t=e.results[i][0].transcript;if(e.results[i].isFinal){ff&&ff({text:t})}else it+=t}if(it)pf&&pf({text:it})};rec.onstart=function(){sf&&sf({state:'listening'});res()};rec.onerror=function(e){rej(e)};rec.onend=function(){sf&&sf({state:'idle'})};rec.start()}catch(err){rej(err)}})},stop:function(){try{rec.stop()}catch(e){}return Promise.resolve()}}})();
+function listen(){if(!live||!dict)return;base='';micOn=true;setLive('listen','Listening','');dict.start().catch(micFail)}
+function liveCheck(){if(live&&done&&!busy&&pend===0&&!micOn){setLive('','Tap to talk');setTimeout(function(){if(live&&done&&pend===0&&!micOn&&!busy)listen()},300)}}
+$('orb').onclick=function(){if(!live)return;if(micOn){dict.stop().catch(function(){});return}stopSay();listen()};
+function endLive(){live=false;stopSay();if(micOn&&dict)dict.stop().catch(function(){});micOn=false;$('ov').classList.remove('show')}
+$('end').onclick=endLive;
+$('mic').onclick=$('live').onclick=function(){note('Voice input is not supported here. Please open this page in Chrome.')};
+
+(async function(){
+  try{if(window.claude)sample=await claude.use('sample')}catch(e){}
+  try{if(sample&&sample.limits){var L=await sample.limits();imgOK=!!(L&&L.images)}}catch(e){}
+  try{dict=window.claude?await claude.use('dictation'):null}catch(e){dict=null}
+  if(!dict)dict=SRAd;
+  if(dict){
+    dict.onPartial(function(o){bump(.55+Math.random()*.4);var t=(base+o.text).trim();if(live)$('cap').textContent=t;else q.value=t});
+    dict.onFinal(function(o){bump(.7);base=(base+o.text+' ');if(live)$('cap').textContent=base.trim();else q.value=base.trim()});
+    dict.onState(function(s){
+      $('mic').classList.toggle('on',s.state==='listening'&&!live);
+      if(s.state==='idle'&&micOn){micOn=false;var t=(live?$('cap').textContent:q.value).trim();base='';
+        if(t){if(live)setLive('think','Thinking');ask(t)}else if(live)setLive('','Tap to talk')}
+    });
+    $('mic').onclick=function(){if(micOn){dict.stop().catch(function(){});return}base='';q.value='';micOn=true;dict.start().catch(micFail)};
+    $('live').onclick=function(){live=true;$('ov').classList.add('show');$('cap').textContent='';if(!raf)raf=requestAnimationFrame(frame);listen()};
+  }
+})();
+</script>
+</body>
+</html>
